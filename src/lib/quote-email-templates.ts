@@ -87,9 +87,10 @@ export const buildUserAutoReplyEmail = ({
 			<div style="max-width:720px;margin:0 auto;background:#ffffff;border:1px solid #d9e2e8;border-radius:12px;overflow:hidden;">
 				<div style="padding:18px 20px;background:#0f2f42;color:#ffffff;border-bottom:1px solid #0b2636;">
 					<img
-						src="https://ciftcilerymm.org/brand/logo-primary.png"
+						src="https://ciftciler-ymm-site.vercel.app/brand/header-brand-strip.png"
 						alt="Çiftçiler YMM"
 						width="170"
+						height="19"
 						border="0"
 						style="display:block;width:170px;max-width:100%;height:auto;margin:0 0 10px;"
 					/>
