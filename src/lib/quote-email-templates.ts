@@ -44,10 +44,10 @@ export const buildInternalQuoteEmail = ({ generalLines, companyLines, serviceLin
 					<img
 						src="https://ciftciler-ymm-site.vercel.app/brand/header-brand-strip.png"
 						alt="\u00c7ift\u00e7iler YMM Header"
-						width="560"
-						height="63"
+						width="744"
+						height="84"
 						border="0"
-						style="display:block;width:100%;max-width:560px;height:auto;"
+						style="display:block;width:100%;max-width:744px;height:auto;"
 					/>
 					<div style="margin-top:12px;padding:11px 14px;background:#0f2f42;border:1px solid #245067;border-radius:6px;">
 						<h2 style="margin:0;font-size:20px;line-height:1.3;color:#ffffff;">Kurumsal \u00d6n De\u011ferlendirme Formu</h2>
@@ -99,10 +99,10 @@ export const buildUserAutoReplyEmail = ({
 					<img
 						src="https://ciftciler-ymm-site.vercel.app/brand/header-brand-strip.png"
 						alt="\u00c7ift\u00e7iler YMM Header"
-						width="560"
-						height="63"
+						width="680"
+						height="77"
 						border="0"
-						style="display:block;width:100%;max-width:560px;height:auto;"
+						style="display:block;width:100%;max-width:680px;height:auto;"
 					/>
 					<div style="margin-top:12px;padding:11px 14px;background:#0f2f42;border:1px solid #245067;border-radius:6px;">
 						<p style="margin:0;font-size:16px;line-height:1.4;font-weight:600;color:#ffffff;">Kurumsal \u00d6n De\u011ferlendirme Talebiniz Al\u0131nd\u0131</p>
