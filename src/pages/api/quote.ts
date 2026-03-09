@@ -72,7 +72,7 @@ const istisnaItemLabelMap = new Map(istisnaIndirimItems.map((item) => [item.key,
 
 const fieldLabelMap = new Map<string, string>([
 	['serviceType', 'Talep Konusu Hizmet'],
-	['onay', 'Aydınlatma ve onay']
+	['onay', 'AydÃ„Â±nlatma ve onay']
 ]);
 
 const optionLabelMap = new Map<string, Map<string, string>>();
@@ -96,21 +96,26 @@ for (const [serviceKey, fields] of Object.entries(serviceFields)) {
 	}
 }
 
-fieldLabelMap.set('tam_tasdik_hesapDonemi', 'Hizmet Alınması Planlanan Hesap Dönemi');
-fieldLabelMap.set('gelir_kurumlar_istisna_indirim_tasdiki_ilgiliHesapDonemi', 'İlgili hesap dönemi');
+fieldLabelMap.set('tam_tasdik_hesapDonemi', 'Hizmet AlÃ„Â±nmasÃ„Â± Planlanan Hesap DÃƒÂ¶nemi');
+fieldLabelMap.set('gelir_kurumlar_istisna_indirim_tasdiki_ilgiliHesapDonemi', 'Ã„Â°lgili hesap dÃƒÂ¶nemi');
 fieldLabelMap.set(
 	'gelir_kurumlar_istisna_indirim_tasdiki_selectedItems[]',
-	'İstisna / indirim seçili kalemleri'
+	'Ã„Â°stisna / indirim seÃƒÂ§ili kalemleri'
 );
-fieldLabelMap.set('kdv_otv_iade_tasdik_islemTurleri[]', 'İadeye konu işlem türleri');
-fieldLabelMap.set('vergi_danismanligi_vergiAlani[]', 'Vergi alanı');
-fieldLabelMap.set('vergi_danismanligi_danismanlikKonusu[]', 'Danışmanlık konusu');
+fieldLabelMap.set('kdv_otv_iade_tasdik_islemTurleri[]', 'Ã„Â°adeye konu iÃ…Å¸lem tÃƒÂ¼rleri');
+fieldLabelMap.set('vergi_danismanligi_vergiAlani[]', 'Vergi alanÃ„Â±');
+fieldLabelMap.set('vergi_danismanligi_danismanlikKonusu[]', 'DanÃ„Â±Ã…Å¸manlÃ„Â±k konusu');
 
-const redirectWithStatus = (request: Request, status: 'success' | 'error', message?: string, code = 303) => {
-	const url = new URL('/teklif-al', request.url);
-	url.searchParams.set('status', status);
-	if (message) url.searchParams.set('message', message);
-	return Response.redirect(url, code);
+const redirectWithStatus = (status: 'success' | 'error', message?: string, code = 303) => {
+	const params = new URLSearchParams({ status });
+	if (message) params.set('message', message);
+
+	return new Response(null, {
+		status: code,
+		headers: {
+			Location: `/teklif-al?${params.toString()}`
+		}
+	});
 };
 
 const getDataMap = (formData: FormData): Record<string, PayloadValue> => {
@@ -151,7 +156,7 @@ const resolveFieldLabel = (key: string): string => {
 	if (key.endsWith('_tutar')) {
 		const itemKey = key.replace('gelir_kurumlar_istisna_indirim_tasdiki_', '').replace('_tutar', '');
 		const itemLabel = istisnaItemLabelMap.get(itemKey);
-		if (itemLabel) return `${itemLabel} - Yaklaşık tutar`;
+		if (itemLabel) return `${itemLabel} - YaklaÃ…Å¸Ã„Â±k tutar`;
 	}
 
 	if (key.endsWith('_not')) {
@@ -259,9 +264,8 @@ export const POST: APIRoute = async ({ request }) => {
 
 		if (!resendApiKey || !receiverEmail || !senderEmail) {
 			return redirectWithStatus(
-				request,
 				'error',
-				'Sistem yapılandırması tamamlanmadı. Lütfen daha sonra tekrar deneyiniz.',
+				'Sistem yapÃ„Â±landÃ„Â±rmasÃ„Â± tamamlanmadÃ„Â±. LÃƒÂ¼tfen daha sonra tekrar deneyiniz.',
 				307
 			);
 		}
@@ -271,7 +275,7 @@ export const POST: APIRoute = async ({ request }) => {
 		const serviceType = getStringValue(data, 'serviceType');
 
 		if (!serviceType || !serviceLabelMap.has(serviceType)) {
-			return redirectWithStatus(request, 'error', 'Lütfen geçerli bir hizmet seçiniz.', 307);
+			return redirectWithStatus('error', 'LÃƒÂ¼tfen geÃƒÂ§erli bir hizmet seÃƒÂ§iniz.', 307);
 		}
 
 		const missingFields = BASE_REQUIRED_FIELDS.filter((field) => !hasValue(data, field));
@@ -285,9 +289,8 @@ export const POST: APIRoute = async ({ request }) => {
 
 		if (missingFields.length > 0) {
 			return redirectWithStatus(
-				request,
 				'error',
-				`Lütfen zorunlu alanları doldurunuz: ${resolveFieldLabel(missingFields[0])}.`,
+				`LÃƒÂ¼tfen zorunlu alanlarÃ„Â± doldurunuz: ${resolveFieldLabel(missingFields[0])}.`,
 				307
 			);
 		}
@@ -296,20 +299,20 @@ export const POST: APIRoute = async ({ request }) => {
 		const companyLines: EmailLine[] = [];
 		const serviceLines = getServiceLines(serviceType, data);
 
-		addLine(generalLines, 'Gönderim zamanı', new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' }));
+		addLine(generalLines, 'GÃƒÂ¶nderim zamanÃ„Â±', new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' }));
 		addLine(generalLines, 'Talep Konusu Hizmet', resolveValueLabel('serviceType', serviceType));
 
 		for (const field of commonFields) {
 			addLine(companyLines, field.label, formatDataForLine(field.name, data));
 		}
 
-		addLine(companyLines, 'Aydınlatma ve onay', hasValue(data, 'onay') ? 'Onaylandı' : 'Onaylanmadı');
+		addLine(companyLines, 'AydÃ„Â±nlatma ve onay', hasValue(data, 'onay') ? 'OnaylandÃ„Â±' : 'OnaylanmadÃ„Â±');
 
 		const html = `
 			<div style="font-family:Arial,'Segoe UI',sans-serif;color:#10222f;line-height:1.5;">
-				<h2 style="margin:0 0 12px;color:#0c2a3a;">Kurumsal Ön Değerlendirme Formu</h2>
-				<p style="margin:0 0 16px;color:#4c6577;">Web sitesi üzerinden yeni bir form talebi iletilmiştir.</p>
-				<h3 style="margin:14px 0 8px;color:#0c2a3a;">Başvuru Özeti</h3>
+				<h2 style="margin:0 0 12px;color:#0c2a3a;">Kurumsal Ãƒâ€“n DeÃ„Å¸erlendirme Formu</h2>
+				<p style="margin:0 0 16px;color:#4c6577;">Web sitesi ÃƒÂ¼zerinden yeni bir form talebi iletilmiÃ…Å¸tir.</p>
+				<h3 style="margin:14px 0 8px;color:#0c2a3a;">BaÃ…Å¸vuru Ãƒâ€“zeti</h3>
 				<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;margin:0 0 12px;">
 					<tbody>${linesToHtmlRows(generalLines)}</tbody>
 				</table>
@@ -317,7 +320,7 @@ export const POST: APIRoute = async ({ request }) => {
 				<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;margin:0 0 12px;">
 					<tbody>${linesToHtmlRows(companyLines)}</tbody>
 				</table>
-				<h3 style="margin:14px 0 8px;color:#0c2a3a;">Hizmete Özel Bilgiler</h3>
+				<h3 style="margin:14px 0 8px;color:#0c2a3a;">Hizmete Ãƒâ€“zel Bilgiler</h3>
 				<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;">
 					<tbody>${linesToHtmlRows(serviceLines)}</tbody>
 				</table>
@@ -325,13 +328,13 @@ export const POST: APIRoute = async ({ request }) => {
 		`;
 
 		const text = [
-			'Kurumsal Ön Değerlendirme Formu',
+			'Kurumsal Ãƒâ€“n DeÃ„Å¸erlendirme Formu',
 			'',
-			linesToText('Başvuru Özeti', generalLines),
+			linesToText('BaÃ…Å¸vuru Ãƒâ€“zeti', generalLines),
 			'',
 			linesToText('Kurumsal Bilgiler', companyLines),
 			'',
-			linesToText('Hizmete Özel Bilgiler', serviceLines)
+			linesToText('Hizmete Ãƒâ€“zel Bilgiler', serviceLines)
 		].join('\n');
 
 		const resend = new Resend(resendApiKey);
@@ -344,13 +347,12 @@ export const POST: APIRoute = async ({ request }) => {
 			text
 		});
 
-		return redirectWithStatus(request, 'success');
+		return redirectWithStatus('success');
 	} catch (error) {
 		console.error('quote form send error', error);
 		return redirectWithStatus(
-			request,
 			'error',
-			'Talebiniz gönderilirken teknik bir hata oluştu. Lütfen tekrar deneyiniz.',
+			'Talebiniz gÃƒÂ¶nderilirken teknik bir hata oluÃ…Å¸tu. LÃƒÂ¼tfen tekrar deneyiniz.',
 			307
 		);
 	}
