@@ -1,0 +1,47 @@
+---
+interface Props {
+	isSuccess: boolean;
+	isError: boolean;
+	message?: string | null;
+}
+
+const { isSuccess, isError, message } = Astro.props;
+---
+
+{
+	(isSuccess || isError) && (
+		<section class={`form-feedback ${isSuccess ? 'is-success' : 'is-error'}`} aria-live="polite">
+			<p>
+				{isSuccess
+					? '\u00d6n de\u011ferlendirme talebiniz al\u0131nm\u0131\u015ft\u0131r. En k\u0131sa s\u00fcrede taraf\u0131n\u0131za d\u00f6n\u00fc\u015f sa\u011flanacakt\u0131r.'
+					: message ?? 'Talebiniz g\u00f6nderilirken bir hata olu\u015ftu. L\u00fctfen alanlar\u0131 kontrol ederek tekrar deneyiniz.'}
+			</p>
+		</section>
+	)
+}
+
+<style>
+	.form-feedback {
+		margin: 0.2rem 0 0.25rem;
+		padding: 0.8rem 0.95rem;
+		border: 1px solid;
+		border-radius: 10px;
+	}
+
+	.form-feedback p {
+		margin: 0;
+		font-size: 0.95rem;
+	}
+
+	.form-feedback.is-success {
+		border-color: #bddbc8;
+		background: #eff8f2;
+		color: #1b5d34;
+	}
+
+	.form-feedback.is-error {
+		border-color: #e6c8cf;
+		background: #fbf3f5;
+		color: #7e2434;
+	}
+</style>

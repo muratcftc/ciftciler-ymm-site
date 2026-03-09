@@ -8,6 +8,7 @@ import GelirKurumlarTasdikFields from '../components/quote-form/GelirKurumlarTas
 import VergiDanismanligiFields from '../components/quote-form/VergiDanismanligiFields.astro';
 import VergiIncelemeFields from '../components/quote-form/VergiIncelemeFields.astro';
 import ReviewSubmit from '../components/quote-form/ReviewSubmit.astro';
+import SubmissionFeedback from '../components/quote-form/SubmissionFeedback.astro';
 
 const status = Astro.url.searchParams.get('status');
 const message = Astro.url.searchParams.get('message');
@@ -15,27 +16,17 @@ const isSuccess = status === 'success';
 const isError = status === 'error';
 ---
 
-<MainLayout title="Teklif Al | Çiftçiler YMM">
+<MainLayout title="Teklif Al | Ã‡iftÃ§iler YMM">
 	<main class="quote-main">
-		<h1>Kurumsal Ön Değerlendirme Formu</h1>
+		<h1>Kurumsal Ã–n DeÄŸerlendirme Formu</h1>
 		<p>
-			Bu form, hizmet talebinizin kapsamını ön değerlendirmeye almak için hazırlanmıştır. Lütfen bilgileri açık
-			ve doğru şekilde paylaşınız.
+			Bu form, hizmet talebinizin kapsamÄ±nÄ± Ã¶n deÄŸerlendirmeye almak iÃ§in hazÄ±rlanmÄ±ÅŸtÄ±r. LÃ¼tfen bilgileri aÃ§Ä±k
+			ve doÄŸru ÅŸekilde paylaÅŸÄ±nÄ±z.
 		</p>
-		<p>Akış: Hizmet seçimi → kurumsal bilgiler → hizmete özel bilgiler → onay ve gönderim.</p>
-		<p class="form-note">* işaretli alanların doldurulması zorunludur.</p>
+		<p>AkÄ±ÅŸ: Hizmet seÃ§imi â†’ kurumsal bilgiler â†’ hizmete Ã¶zel bilgiler â†’ onay ve gÃ¶nderim.</p>
+		<p class="form-note">* iÅŸaretli alanlarÄ±n doldurulmasÄ± zorunludur.</p>
 
-		{
-			(isSuccess || isError) && (
-				<section class={`form-feedback ${isSuccess ? 'is-success' : 'is-error'}`} aria-live="polite">
-					<p>
-						{isSuccess
-							? 'Ön değerlendirme talebiniz alınmıştır. En kısa sürede tarafınıza dönüş sağlanacaktır.'
-							: message ?? 'Talebiniz gönderilirken bir hata oluştu. Lütfen alanları kontrol ederek tekrar deneyiniz.'}
-					</p>
-				</section>
-			)
-		}
+		<SubmissionFeedback isSuccess={isSuccess} isError={isError} message={message} />
 
 		<form method="post" action="/api/quote">
 			<ServiceSelector />
@@ -117,29 +108,3 @@ const isError = status === 'error';
 		}
 	});
 </script>
-
-<style>
-	.form-feedback {
-		margin: 0.2rem 0 0.25rem;
-		padding: 0.8rem 0.95rem;
-		border: 1px solid;
-		border-radius: 10px;
-	}
-
-	.form-feedback p {
-		margin: 0;
-		font-size: 0.95rem;
-	}
-
-	.form-feedback.is-success {
-		border-color: #bddbc8;
-		background: #eff8f2;
-		color: #1b5d34;
-	}
-
-	.form-feedback.is-error {
-		border-color: #e6c8cf;
-		background: #fbf3f5;
-		color: #7e2434;
-	}
-</style>

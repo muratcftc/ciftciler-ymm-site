@@ -2,15 +2,15 @@ import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
 import { SERVICE_OPTIONS } from '../../lib/service-config';
 import { commonFields, istisnaIndirimItems, serviceFields } from '../../lib/quote-fields';
+import {
+	buildInternalQuoteEmail,
+	buildUserAutoReplyEmail,
+	type EmailLine
+} from '../../lib/quote-email-templates';
 
 export const prerender = false;
 
 type PayloadValue = string | string[];
-
-interface EmailLine {
-	label: string;
-	value: string;
-}
 
 const BASE_REQUIRED_FIELDS = [
 	'serviceType',
@@ -231,25 +231,6 @@ const getServiceLines = (serviceType: string, data: Record<string, PayloadValue>
 	return lines;
 };
 
-const escapeHtml = (value: string): string =>
-	value
-		.replaceAll('&', '&amp;')
-		.replaceAll('<', '&lt;')
-		.replaceAll('>', '&gt;')
-		.replaceAll('"', '&quot;')
-		.replaceAll("'", '&#39;');
-
-const linesToHtmlRows = (lines: EmailLine[]) =>
-	lines
-		.map(
-			(line) =>
-				`<tr><th align="left" style="padding:8px 10px;border:1px solid #d9e2e8;background:#f6fafc;">${escapeHtml(line.label)}</th><td style="padding:8px 10px;border:1px solid #d9e2e8;">${escapeHtml(line.value)}</td></tr>`
-		)
-		.join('');
-
-const linesToText = (title: string, lines: EmailLine[]) =>
-	`${title}\n${lines.map((line) => `- ${line.label}: ${line.value}`).join('\n')}`;
-
 const MSG_SYSTEM_CONFIG = 'Sistem yap\u0131land\u0131rmas\u0131 tamamlanmad\u0131. L\u00fctfen daha sonra tekrar deneyiniz.';
 const MSG_INVALID_SERVICE = 'L\u00fctfen ge\u00e7erli bir hizmet se\u00e7iniz.';
 const MSG_REQUIRED_PREFIX = 'L\u00fctfen zorunlu alanlar\u0131 doldurunuz: ';
@@ -309,34 +290,20 @@ export const POST: APIRoute = async ({ request }) => {
 
 		addLine(companyLines, 'Ayd\u0131nlatma ve onay', hasValue(data, 'onay') ? 'Onayland\u0131' : 'Onaylanmad\u0131');
 
-		const html = `
-			<div style="font-family:Arial,'Segoe UI',sans-serif;color:#10222f;line-height:1.5;">
-				<h2 style="margin:0 0 12px;color:#0c2a3a;">Kurumsal \u00d6n De\u011ferlendirme Formu</h2>
-				<p style="margin:0 0 16px;color:#4c6577;">Web sitesi \u00fczerinden yeni bir form talebi iletilmi\u015ftir.</p>
-				<h3 style="margin:14px 0 8px;color:#0c2a3a;">Ba\u015fvuru \u00d6zeti</h3>
-				<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;margin:0 0 12px;">
-					<tbody>${linesToHtmlRows(generalLines)}</tbody>
-				</table>
-				<h3 style="margin:14px 0 8px;color:#0c2a3a;">Kurumsal Bilgiler</h3>
-				<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;margin:0 0 12px;">
-					<tbody>${linesToHtmlRows(companyLines)}</tbody>
-				</table>
-				<h3 style="margin:14px 0 8px;color:#0c2a3a;">Hizmete \u00d6zel Bilgiler</h3>
-				<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;">
-					<tbody>${linesToHtmlRows(serviceLines)}</tbody>
-				</table>
-			</div>
-		`;
+		const { html, text } = buildInternalQuoteEmail({
+			generalLines,
+			companyLines,
+			serviceLines
+		});
 
-		const text = [
-			'Kurumsal \u00d6n De\u011ferlendirme Formu',
-			'',
-			linesToText('Ba\u015fvuru \u00d6zeti', generalLines),
-			'',
-			linesToText('Kurumsal Bilgiler', companyLines),
-			'',
-			linesToText('Hizmete \u00d6zel Bilgiler', serviceLines)
-		].join('\n');
+		const userSummaryLines: EmailLine[] = [];
+		addLine(userSummaryLines, 'Ad Soyad', formatDataForLine('adSoyad', data));
+		addLine(userSummaryLines, '\u015eirket / Kurum', formatDataForLine('sirketUnvani', data));
+		addLine(userSummaryLines, 'E-posta', formatDataForLine('eposta', data));
+		addLine(userSummaryLines, 'Telefon', formatDataForLine('telefon', data));
+		addLine(userSummaryLines, 'Talep Konusu Hizmet', resolveValueLabel('serviceType', serviceType));
+		addLine(userSummaryLines, 'Talep \u00d6zeti', formatDataForLine('ihtiyacAciklamasi', data));
+		addLine(userSummaryLines, 'K\u0131sa A\u00e7\u0131klama', formatDataForLine(`${serviceType}_kisaAciklama`, data));
 
 		const resend = new Resend(resendApiKey);
 		console.log('[quote api] FORM_SENDER_EMAIL exists:', Boolean(senderEmail));
@@ -351,9 +318,31 @@ export const POST: APIRoute = async ({ request }) => {
 			text
 		});
 
+		const requesterEmail = getStringValue(data, 'eposta');
+		const requesterFullName = getStringValue(data, 'adSoyad');
+		const requesterCompany = getStringValue(data, 'sirketUnvani');
+		const serviceLabel = resolveValueLabel('serviceType', serviceType);
+		const userMail = buildUserAutoReplyEmail({
+			fullName: requesterFullName,
+			companyName: requesterCompany,
+			serviceLabel,
+			receiverEmail,
+			summaryLines: userSummaryLines
+		});
+
+		await resend.emails.send({
+			from: senderEmail,
+			to: [requesterEmail],
+			replyTo: receiverEmail,
+			subject: `Talebiniz Al\u0131nd\u0131 - ${serviceLabel}`,
+			html: userMail.html,
+			text: userMail.text
+		});
+
 		return redirectWithStatus('success');
 	} catch (error) {
 		console.error('quote form send error', error);
 		return redirectWithStatus('error', MSG_TECHNICAL, 307);
 	}
 };
+
