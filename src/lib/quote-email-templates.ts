@@ -40,18 +40,20 @@ export const buildInternalQuoteEmail = ({ generalLines, companyLines, serviceLin
 	const html = `
 		<div style="font-family:Arial,'Segoe UI',sans-serif;color:#10222f;line-height:1.55;background:#f4f7f9;padding:20px;">
 			<div style="max-width:780px;margin:0 auto;background:#ffffff;border:1px solid #d9e2e8;border-radius:12px;overflow:hidden;">
-				<div style="padding:16px 18px;background:#f7f9fb;border-bottom:1px solid #d9e2e8;">
-					<img
-						src="https://ciftciler-ymm-site.vercel.app/brand/header-brand-strip.png"
-						alt="\u00c7ift\u00e7iler YMM Header"
-						width="460"
-						height="52"
-						border="0"
-						style="display:block;width:100%;max-width:460px;height:auto;"
-					/>
-					<div style="margin-top:12px;padding:10px 14px;background:#0f2f42;border:1px solid #245067;border-radius:6px;">
-						<h2 style="margin:0;font-size:20px;line-height:1.3;color:#ffffff;">Kurumsal \u00d6n De\u011ferlendirme Formu</h2>
-						<p style="margin:6px 0 0;font-size:13px;color:#d9e8f2;">Web sitesi \u00fczerinden yeni bir talep iletildi.</p>
+				<div style="padding:18px 18px;background:#f7f9fb;border-bottom:1px solid #d9e2e8;">
+					<div style="width:100%;max-width:560px;">
+						<img
+							src="https://ciftciler-ymm-site.vercel.app/brand/header-brand-strip.png"
+							alt="\u00c7ift\u00e7iler YMM Header"
+							width="560"
+							height="63"
+							border="0"
+							style="display:block;width:100%;max-width:560px;height:auto;"
+						/>
+						<div style="margin-top:12px;padding:11px 14px;background:#0f2f42;border:1px solid #245067;border-radius:6px;">
+							<h2 style="margin:0;font-size:20px;line-height:1.3;color:#ffffff;">Kurumsal \u00d6n De\u011ferlendirme Formu</h2>
+							<p style="margin:6px 0 0;font-size:13px;color:#d9e8f2;">Web sitesi \u00fczerinden yeni bir talep iletildi.</p>
+						</div>
 					</div>
 				</div>
 				<div style="padding:18px;">
@@ -95,17 +97,19 @@ export const buildUserAutoReplyEmail = ({
 	const html = `
 		<div style="font-family:Arial,'Segoe UI',sans-serif;color:#10222f;line-height:1.6;background:#f4f7f9;padding:20px;">
 			<div style="max-width:720px;margin:0 auto;background:#ffffff;border:1px solid #d9e2e8;border-radius:12px;overflow:hidden;">
-				<div style="padding:16px 20px;background:#f7f9fb;border-bottom:1px solid #d9e2e8;">
-					<img
-						src="https://ciftciler-ymm-site.vercel.app/brand/header-brand-strip.png"
-						alt="\u00c7ift\u00e7iler YMM Header"
-						width="500"
-						height="56"
-						border="0"
-						style="display:block;width:100%;max-width:500px;height:auto;"
-					/>
-					<div style="margin-top:12px;padding:10px 14px;background:#0f2f42;border:1px solid #245067;border-radius:6px;">
-						<p style="margin:0;font-size:16px;line-height:1.4;font-weight:600;color:#ffffff;">Kurumsal \u00d6n De\u011ferlendirme Talebiniz Al\u0131nd\u0131</p>
+				<div style="padding:18px 20px;background:#f7f9fb;border-bottom:1px solid #d9e2e8;">
+					<div style="width:100%;max-width:560px;">
+						<img
+							src="https://ciftciler-ymm-site.vercel.app/brand/header-brand-strip.png"
+							alt="\u00c7ift\u00e7iler YMM Header"
+							width="560"
+							height="63"
+							border="0"
+							style="display:block;width:100%;max-width:560px;height:auto;"
+						/>
+						<div style="margin-top:12px;padding:11px 14px;background:#0f2f42;border:1px solid #245067;border-radius:6px;">
+							<p style="margin:0;font-size:16px;line-height:1.4;font-weight:600;color:#ffffff;">Kurumsal \u00d6n De\u011ferlendirme Talebiniz Al\u0131nd\u0131</p>
+						</div>
 					</div>
 				</div>
 				<div style="padding:18px 20px;">
