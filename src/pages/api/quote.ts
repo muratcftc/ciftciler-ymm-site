@@ -51,10 +51,7 @@ const SERVICE_REQUIREMENTS: Record<string, { required: string[]; requiredArrays?
 		requiredArrays: ['gelir_kurumlar_istisna_indirim_tasdiki_selectedItems[]']
 	},
 	vergi_danismanligi: {
-		required: [
-			'vergi_danismanligi_hizmetModeli',
-			'vergi_danismanligi_zamanOnceligi'
-		],
+		required: ['vergi_danismanligi_hizmetModeli', 'vergi_danismanligi_zamanOnceligi'],
 		requiredArrays: ['vergi_danismanligi_vergiAlani[]', 'vergi_danismanligi_danismanlikKonusu[]']
 	},
 	vergi_inceleme_uyusmazlik: {
@@ -72,7 +69,7 @@ const istisnaItemLabelMap = new Map(istisnaIndirimItems.map((item) => [item.key,
 
 const fieldLabelMap = new Map<string, string>([
 	['serviceType', 'Talep Konusu Hizmet'],
-	['onay', 'AydÃ„Â±nlatma ve onay']
+	['onay', 'Ayd\u0131nlatma ve onay']
 ]);
 
 const optionLabelMap = new Map<string, Map<string, string>>();
@@ -96,15 +93,12 @@ for (const [serviceKey, fields] of Object.entries(serviceFields)) {
 	}
 }
 
-fieldLabelMap.set('tam_tasdik_hesapDonemi', 'Hizmet AlÃ„Â±nmasÃ„Â± Planlanan Hesap DÃƒÂ¶nemi');
-fieldLabelMap.set('gelir_kurumlar_istisna_indirim_tasdiki_ilgiliHesapDonemi', 'Ã„Â°lgili hesap dÃƒÂ¶nemi');
-fieldLabelMap.set(
-	'gelir_kurumlar_istisna_indirim_tasdiki_selectedItems[]',
-	'Ã„Â°stisna / indirim seÃƒÂ§ili kalemleri'
-);
-fieldLabelMap.set('kdv_otv_iade_tasdik_islemTurleri[]', 'Ã„Â°adeye konu iÃ…Å¸lem tÃƒÂ¼rleri');
-fieldLabelMap.set('vergi_danismanligi_vergiAlani[]', 'Vergi alanÃ„Â±');
-fieldLabelMap.set('vergi_danismanligi_danismanlikKonusu[]', 'DanÃ„Â±Ã…Å¸manlÃ„Â±k konusu');
+fieldLabelMap.set('tam_tasdik_hesapDonemi', 'Hizmet Al\u0131nmas\u0131 Planlanan Hesap D\u00f6nemi');
+fieldLabelMap.set('gelir_kurumlar_istisna_indirim_tasdiki_ilgiliHesapDonemi', '\u0130lgili hesap d\u00f6nemi');
+fieldLabelMap.set('gelir_kurumlar_istisna_indirim_tasdiki_selectedItems[]', '\u0130stisna / indirim se\u00e7ili kalemleri');
+fieldLabelMap.set('kdv_otv_iade_tasdik_islemTurleri[]', '\u0130adeye konu i\u015flem t\u00fcrleri');
+fieldLabelMap.set('vergi_danismanligi_vergiAlani[]', 'Vergi alan\u0131');
+fieldLabelMap.set('vergi_danismanligi_danismanlikKonusu[]', 'Dan\u0131\u015fmanl\u0131k konusu');
 
 const redirectWithStatus = (status: 'success' | 'error', message?: string, code = 303) => {
 	const params = new URLSearchParams({ status });
@@ -156,7 +150,7 @@ const resolveFieldLabel = (key: string): string => {
 	if (key.endsWith('_tutar')) {
 		const itemKey = key.replace('gelir_kurumlar_istisna_indirim_tasdiki_', '').replace('_tutar', '');
 		const itemLabel = istisnaItemLabelMap.get(itemKey);
-		if (itemLabel) return `${itemLabel} - YaklaÃ…Å¸Ã„Â±k tutar`;
+		if (itemLabel) return `${itemLabel} - Yakla\u015f\u0131k tutar`;
 	}
 
 	if (key.endsWith('_not')) {
@@ -256,18 +250,29 @@ const linesToHtmlRows = (lines: EmailLine[]) =>
 const linesToText = (title: string, lines: EmailLine[]) =>
 	`${title}\n${lines.map((line) => `- ${line.label}: ${line.value}`).join('\n')}`;
 
+const MSG_SYSTEM_CONFIG = 'Sistem yap\u0131land\u0131rmas\u0131 tamamlanmad\u0131. L\u00fctfen daha sonra tekrar deneyiniz.';
+const MSG_INVALID_SERVICE = 'L\u00fctfen ge\u00e7erli bir hizmet se\u00e7iniz.';
+const MSG_REQUIRED_PREFIX = 'L\u00fctfen zorunlu alanlar\u0131 doldurunuz: ';
+const MSG_TECHNICAL = 'Talebiniz g\u00f6nderilirken teknik bir hata olu\u015ftu. L\u00fctfen tekrar deneyiniz.';
+
 export const POST: APIRoute = async ({ request }) => {
 	try {
 		const resendApiKey = import.meta.env.RESEND_API_KEY;
 		const receiverEmail = import.meta.env.FORM_RECEIVER_EMAIL;
 		const senderEmail = import.meta.env.FORM_SENDER_EMAIL;
 
-		if (!resendApiKey || !receiverEmail || !senderEmail) {
-			return redirectWithStatus(
-				'error',
-				'Sistem yapÃ„Â±landÃ„Â±rmasÃ„Â± tamamlanmadÃ„Â±. LÃƒÂ¼tfen daha sonra tekrar deneyiniz.',
-				307
-			);
+		const requiredEnv = {
+			RESEND_API_KEY: resendApiKey,
+			FORM_RECEIVER_EMAIL: receiverEmail,
+			FORM_SENDER_EMAIL: senderEmail
+		};
+		const missingEnv = Object.entries(requiredEnv)
+			.filter(([, value]) => !value)
+			.map(([key]) => key);
+
+		if (missingEnv.length > 0) {
+			console.error(`[quote api] Missing environment variables: ${missingEnv.join(', ')}`);
+			return redirectWithStatus('error', MSG_SYSTEM_CONFIG, 307);
 		}
 
 		const formData = await request.formData();
@@ -275,7 +280,7 @@ export const POST: APIRoute = async ({ request }) => {
 		const serviceType = getStringValue(data, 'serviceType');
 
 		if (!serviceType || !serviceLabelMap.has(serviceType)) {
-			return redirectWithStatus('error', 'LÃƒÂ¼tfen geÃƒÂ§erli bir hizmet seÃƒÂ§iniz.', 307);
+			return redirectWithStatus('error', MSG_INVALID_SERVICE, 307);
 		}
 
 		const missingFields = BASE_REQUIRED_FIELDS.filter((field) => !hasValue(data, field));
@@ -288,31 +293,27 @@ export const POST: APIRoute = async ({ request }) => {
 		}
 
 		if (missingFields.length > 0) {
-			return redirectWithStatus(
-				'error',
-				`LÃƒÂ¼tfen zorunlu alanlarÃ„Â± doldurunuz: ${resolveFieldLabel(missingFields[0])}.`,
-				307
-			);
+			return redirectWithStatus('error', `${MSG_REQUIRED_PREFIX}${resolveFieldLabel(missingFields[0])}.`, 307);
 		}
 
 		const generalLines: EmailLine[] = [];
 		const companyLines: EmailLine[] = [];
 		const serviceLines = getServiceLines(serviceType, data);
 
-		addLine(generalLines, 'GÃƒÂ¶nderim zamanÃ„Â±', new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' }));
+		addLine(generalLines, 'G\u00f6nderim zaman\u0131', new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' }));
 		addLine(generalLines, 'Talep Konusu Hizmet', resolveValueLabel('serviceType', serviceType));
 
 		for (const field of commonFields) {
 			addLine(companyLines, field.label, formatDataForLine(field.name, data));
 		}
 
-		addLine(companyLines, 'AydÃ„Â±nlatma ve onay', hasValue(data, 'onay') ? 'OnaylandÃ„Â±' : 'OnaylanmadÃ„Â±');
+		addLine(companyLines, 'Ayd\u0131nlatma ve onay', hasValue(data, 'onay') ? 'Onayland\u0131' : 'Onaylanmad\u0131');
 
 		const html = `
 			<div style="font-family:Arial,'Segoe UI',sans-serif;color:#10222f;line-height:1.5;">
-				<h2 style="margin:0 0 12px;color:#0c2a3a;">Kurumsal Ãƒâ€“n DeÃ„Å¸erlendirme Formu</h2>
-				<p style="margin:0 0 16px;color:#4c6577;">Web sitesi ÃƒÂ¼zerinden yeni bir form talebi iletilmiÃ…Å¸tir.</p>
-				<h3 style="margin:14px 0 8px;color:#0c2a3a;">BaÃ…Å¸vuru Ãƒâ€“zeti</h3>
+				<h2 style="margin:0 0 12px;color:#0c2a3a;">Kurumsal \u00d6n De\u011ferlendirme Formu</h2>
+				<p style="margin:0 0 16px;color:#4c6577;">Web sitesi \u00fczerinden yeni bir form talebi iletilmi\u015ftir.</p>
+				<h3 style="margin:14px 0 8px;color:#0c2a3a;">Ba\u015fvuru \u00d6zeti</h3>
 				<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;margin:0 0 12px;">
 					<tbody>${linesToHtmlRows(generalLines)}</tbody>
 				</table>
@@ -320,7 +321,7 @@ export const POST: APIRoute = async ({ request }) => {
 				<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;margin:0 0 12px;">
 					<tbody>${linesToHtmlRows(companyLines)}</tbody>
 				</table>
-				<h3 style="margin:14px 0 8px;color:#0c2a3a;">Hizmete Ãƒâ€“zel Bilgiler</h3>
+				<h3 style="margin:14px 0 8px;color:#0c2a3a;">Hizmete \u00d6zel Bilgiler</h3>
 				<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;">
 					<tbody>${linesToHtmlRows(serviceLines)}</tbody>
 				</table>
@@ -328,13 +329,13 @@ export const POST: APIRoute = async ({ request }) => {
 		`;
 
 		const text = [
-			'Kurumsal Ãƒâ€“n DeÃ„Å¸erlendirme Formu',
+			'Kurumsal \u00d6n De\u011ferlendirme Formu',
 			'',
-			linesToText('BaÃ…Å¸vuru Ãƒâ€“zeti', generalLines),
+			linesToText('Ba\u015fvuru \u00d6zeti', generalLines),
 			'',
 			linesToText('Kurumsal Bilgiler', companyLines),
 			'',
-			linesToText('Hizmete Ãƒâ€“zel Bilgiler', serviceLines)
+			linesToText('Hizmete \u00d6zel Bilgiler', serviceLines)
 		].join('\n');
 
 		const resend = new Resend(resendApiKey);
@@ -350,10 +351,6 @@ export const POST: APIRoute = async ({ request }) => {
 		return redirectWithStatus('success');
 	} catch (error) {
 		console.error('quote form send error', error);
-		return redirectWithStatus(
-			'error',
-			'Talebiniz gÃƒÂ¶nderilirken teknik bir hata oluÃ…Å¸tu. LÃƒÂ¼tfen tekrar deneyiniz.',
-			307
-		);
+		return redirectWithStatus('error', MSG_TECHNICAL, 307);
 	}
 };
