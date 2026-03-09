@@ -1,4 +1,4 @@
-export interface EmailLine {
+﻿export interface EmailLine {
 	label: string;
 	value: string;
 }
@@ -40,11 +40,20 @@ export const buildInternalQuoteEmail = ({ generalLines, companyLines, serviceLin
 	const html = `
 		<div style="font-family:Arial,'Segoe UI',sans-serif;color:#10222f;line-height:1.55;background:#f4f7f9;padding:20px;">
 			<div style="max-width:780px;margin:0 auto;background:#ffffff;border:1px solid #d9e2e8;border-radius:12px;overflow:hidden;">
-				<div style="padding:16px 18px;background:linear-gradient(140deg,#0f2f42 0%,#15445b 100%);color:#f6fbff;">
-					<h2 style="margin:0;font-size:20px;">Kurumsal \u00d6n De\u011ferlendirme Formu</h2>
-					<p style="margin:6px 0 0;font-size:13px;opacity:0.9;">Web sitesi \u00fczerinden yeni bir talep iletildi.</p>
-				</div>
-				<div style="padding:18px;">
+				<div style="background:#0f2f42;color:#f6fbff;">
+					<img
+						src="https://ciftciler-ymm-site.vercel.app/brand/header-brand-strip.png"
+						alt="\u00c7ift\u00e7iler YMM Header"
+						width="780"
+						height="88"
+						border="0"
+						style="display:block;width:100%;max-width:780px;height:auto;"
+					/>
+					<div style="padding:14px 18px;background:#0f2f42;border-top:1px solid #245067;">
+						<h2 style="margin:0;font-size:20px;line-height:1.3;color:#ffffff;">Kurumsal \u00d6n De\u011ferlendirme Formu</h2>
+						<p style="margin:6px 0 0;font-size:13px;color:#d9e8f2;">Web sitesi \u00fczerinden yeni bir talep iletildi.</p>
+					</div>
+				</div><div style="padding:18px;">
 					<h3 style="margin:0 0 8px;color:#0c2a3a;font-size:16px;">Ba\u015fvuru \u00d6zeti</h3>
 					<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;margin:0 0 14px;">
 						<tbody>${linesToHtmlRows(generalLines)}</tbody>
@@ -85,19 +94,19 @@ export const buildUserAutoReplyEmail = ({
 	const html = `
 		<div style="font-family:Arial,'Segoe UI',sans-serif;color:#10222f;line-height:1.6;background:#f4f7f9;padding:20px;">
 			<div style="max-width:720px;margin:0 auto;background:#ffffff;border:1px solid #d9e2e8;border-radius:12px;overflow:hidden;">
-				<div style="padding:18px 20px;background:#0f2f42;color:#ffffff;border-bottom:1px solid #0b2636;">
+				<div style="background:#0f2f42;color:#ffffff;">
 					<img
 						src="https://ciftciler-ymm-site.vercel.app/brand/header-brand-strip.png"
-						alt="Çiftçiler YMM"
-						width="170"
-						height="19"
+						alt="\u00c7ift\u00e7iler YMM Header"
+						width="720"
+						height="81"
 						border="0"
-						style="display:block;width:170px;max-width:100%;height:auto;margin:0 0 10px;"
+						style="display:block;width:100%;max-width:720px;height:auto;"
 					/>
-					<h2 style="margin:0;font-size:20px;line-height:1.3;color:#ffffff;">\u00c7ift\u00e7iler YMM</h2>
-					<p style="margin:7px 0 0;font-size:13px;color:#d9e8f2;">Kurumsal \u00d6n De\u011ferlendirme Talebiniz Al\u0131nd\u0131</p>
-				</div>
-				<div style="padding:18px 20px;">
+					<div style="padding:12px 20px;border-top:1px solid #245067;background:#0f2f42;">
+						<p style="margin:0;font-size:15px;line-height:1.4;font-weight:600;color:#ffffff;">Kurumsal \u00d6n De\u011ferlendirme Talebiniz Al\u0131nd\u0131</p>
+					</div>
+				</div><div style="padding:18px 20px;">
 					<p style="margin:0 0 12px;">Say\u0131n ${escapeHtml(fullName || 'Yetkili')},</p>
 					<p style="margin:0 0 10px;">
 						${escapeHtml(companyName || '\u015eirketiniz')} ad\u0131na iletilen <strong>${escapeHtml(serviceLabel)}</strong> talebiniz taraf\u0131m\u0131za ula\u015fm\u0131\u015ft\u0131r.
@@ -139,3 +148,4 @@ export const buildUserAutoReplyEmail = ({
 
 	return { html, text };
 };
+
