@@ -86,12 +86,6 @@ export const buildUserAutoReplyEmail = ({
 		<div style="font-family:Arial,'Segoe UI',sans-serif;color:#10222f;line-height:1.6;background:#f4f7f9;padding:20px;">
 			<div style="max-width:720px;margin:0 auto;background:#ffffff;border:1px solid #d9e2e8;border-radius:12px;overflow:hidden;">
 				<div style="padding:18px 20px;background:#0f2f42;color:#ffffff;border-bottom:1px solid #0b2636;">
-					<img
-						src="https://ciftcilerymm.org/logo.png"
-						alt="Çiftçiler YMM"
-						width="160"
-						style="display:block;width:160px;max-width:100%;height:auto;margin:0 0 10px;"
-					/>
 					<h2 style="margin:0;font-size:20px;line-height:1.3;color:#ffffff;">\u00c7ift\u00e7iler YMM</h2>
 					<p style="margin:7px 0 0;font-size:13px;color:#d9e8f2;">Kurumsal \u00d6n De\u011ferlendirme Talebiniz Al\u0131nd\u0131</p>
 				</div>
