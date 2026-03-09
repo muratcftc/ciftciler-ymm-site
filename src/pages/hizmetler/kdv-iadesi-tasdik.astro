@@ -1,0 +1,33 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ServicePageSections from '../../components/services/ServicePageSections.astro';
+---
+
+<MainLayout title="KDV İadesi Tasdik | Çiftçiler YMM">
+	<main>
+		<ServicePageSections
+			serviceTitle="KDV İadesi Tasdik Hizmetleri"
+			serviceSummary="KDV iade süreçlerinin mevzuata uygun belge seti ve süreç adımlarıyla yürütülmesine yönelik hizmet sunulur."
+			problemItems={[
+				'İade sürecinin uzaması nedeniyle iç süreç planlamasında belirsizlik oluştuğunda',
+				'Belge ve hesap mutabakatlarında tekrar eden farklılıklar bulunduğunda',
+				'İade dosyası hazırlık adımlarının standardize edilmesi gerektiğinde'
+			]}
+			approachItems={[
+				'İade türüne göre süreç adımları ve belge ihtiyaçları belirlenir',
+				'Belge, kayıt ve hesap kontrolleri planlı şekilde yürütülür',
+				'Başvuru öncesi dosya bütünlüğü değerlendirilir'
+			]}
+			scopeItems={[
+				'İade dosyası ön kontrol ve uygunluk değerlendirmesi',
+				'İlgili belge setine ilişkin teknik bilgilendirme',
+				'Süreç takvimi ve mevzuat adımlarına ilişkin takip'
+			]}
+			whyItems={[
+				'Belge düzeni ve süreç adımlarına odaklı çalışma',
+				'Kurumsal ekiplerle planlı koordinasyon',
+				'Süreç boyunca kayıtlı ve izlenebilir iletişim'
+			]}
+		/>
+	</main>
+</MainLayout>

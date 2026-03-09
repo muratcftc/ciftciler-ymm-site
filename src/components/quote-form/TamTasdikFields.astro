@@ -1,0 +1,41 @@
+---
+import { serviceFields } from '../../lib/quote-fields';
+
+const fields = serviceFields.tam_tasdik;
+const fieldPrefix = 'tam_tasdik';
+const currentYear = new Date().getFullYear();
+const hesapDonemiOptions = [0, 1, 2, 3].map((yearOffset) => currentYear + yearOffset);
+---
+
+<fieldset data-requires-service disabled>
+	<legend>3) Tam Tasdik Hizmeti İçin Ön Bilgiler</legend>
+	<p>Ön kapsamın netleşmesi için aşağıdaki bilgileri paylaşınız.</p>
+
+	<div>
+		<label for={`${fieldPrefix}_hesapDonemi`}>
+			Hizmet Alınması Planlanan Hesap Dönemi <span class="required-mark">*</span>
+		</label>
+		<select id={`${fieldPrefix}_hesapDonemi`} name={`${fieldPrefix}_hesapDonemi`} required>
+			{hesapDonemiOptions.map((optionYear) => <option selected={optionYear === currentYear}>{optionYear}</option>)}
+		</select>
+	</div>
+
+	{
+		fields.map((field) => (
+			<div>
+				<label for={`${fieldPrefix}_${field.name}`}>
+					{field.label}
+					{field.required && <span class="required-mark">*</span>}
+				</label>
+				<select
+					id={`${fieldPrefix}_${field.name}`}
+					name={`${fieldPrefix}_${field.name}`}
+					required={field.required}
+				>
+					<option value="">Seçim yapınız</option>
+					{field.options?.map((optionItem) => <option value={optionItem.value}>{optionItem.label}</option>)}
+				</select>
+			</div>
+		))
+	}
+</fieldset>

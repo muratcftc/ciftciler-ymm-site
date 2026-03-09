@@ -1,0 +1,102 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import ServiceSelector from '../components/quote-form/ServiceSelector.astro';
+import CommonFields from '../components/quote-form/CommonFields.astro';
+import TamTasdikFields from '../components/quote-form/TamTasdikFields.astro';
+import KdvIadeFields from '../components/quote-form/KdvIadeFields.astro';
+import GelirKurumlarTasdikFields from '../components/quote-form/GelirKurumlarTasdikFields.astro';
+import VergiDanismanligiFields from '../components/quote-form/VergiDanismanligiFields.astro';
+import VergiIncelemeFields from '../components/quote-form/VergiIncelemeFields.astro';
+import ReviewSubmit from '../components/quote-form/ReviewSubmit.astro';
+---
+
+<MainLayout title="Teklif Al | Çiftçiler YMM">
+	<main>
+		<h1>Kurumsal Ön Değerlendirme Formu</h1>
+		<p>
+			Bu form, hizmet talebinizin kapsamını ön değerlendirmeye almak için hazırlanmıştır. Lütfen
+			bilgileri açık ve doğru şekilde paylaşınız.
+		</p>
+		<p>Akış: Hizmet seçimi → kurumsal bilgiler → hizmete özel bilgiler → onay ve gönderim.</p>
+		<p class="form-note">* işaretli alanların doldurulması zorunludur.</p>
+
+		<form method="post" action="#">
+			<ServiceSelector />
+			<CommonFields />
+
+			<div data-service-group="tam_tasdik" hidden>
+				<TamTasdikFields />
+			</div>
+
+			<div data-service-group="kdv_otv_iade_tasdik" hidden>
+				<KdvIadeFields />
+			</div>
+
+			<div data-service-group="gelir_kurumlar_istisna_indirim_tasdiki" hidden>
+				<GelirKurumlarTasdikFields />
+			</div>
+
+			<div data-service-group="vergi_danismanligi" hidden>
+				<VergiDanismanligiFields />
+			</div>
+
+			<div data-service-group="vergi_inceleme_uyusmazlik" hidden>
+				<VergiIncelemeFields />
+			</div>
+
+			<ReviewSubmit />
+		</form>
+	</main>
+</MainLayout>
+
+<script>
+	const serviceSelect = document.querySelector('#service-type');
+	const serviceGroups = document.querySelectorAll('[data-service-group]');
+	const dependentFieldsets = document.querySelectorAll('[data-requires-service]');
+
+	const toggleQuoteFlow = () => {
+		const selectedService = serviceSelect?.value ?? '';
+		const hasServiceSelection = selectedService.length > 0;
+
+		dependentFieldsets.forEach((fieldset) => {
+			fieldset.disabled = !hasServiceSelection;
+		});
+
+		serviceGroups.forEach((groupElement) => {
+			const isActiveGroup = groupElement.dataset.serviceGroup === selectedService;
+			groupElement.hidden = !isActiveGroup;
+
+			groupElement.querySelectorAll('fieldset').forEach((fieldset) => {
+				fieldset.disabled = !isActiveGroup;
+			});
+		});
+	};
+
+	const toggleConditionalFields = () => {
+		const revealToggles = document.querySelectorAll('input[type="checkbox"][data-reveal-target]');
+
+		revealToggles.forEach((toggleInput) => {
+			const targetId = toggleInput.getAttribute('data-reveal-target');
+			if (!targetId) return;
+
+			const targetElement = document.getElementById(targetId);
+			if (!targetElement) return;
+
+			const isVisible = toggleInput.checked;
+			targetElement.hidden = !isVisible;
+
+			targetElement.querySelectorAll('input, select, textarea').forEach((formElement) => {
+				formElement.disabled = !isVisible;
+			});
+		});
+	};
+
+	toggleQuoteFlow();
+	toggleConditionalFields();
+	serviceSelect?.addEventListener('change', toggleQuoteFlow);
+	document.addEventListener('change', (event) => {
+		if (event.target instanceof HTMLInputElement && event.target.type === 'checkbox') {
+			toggleConditionalFields();
+		}
+	});
+</script>

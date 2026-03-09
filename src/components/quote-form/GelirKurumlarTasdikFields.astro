@@ -1,0 +1,210 @@
+---
+import { istisnaIndirimItems, serviceFields } from '../../lib/quote-fields';
+
+const fields = serviceFields.gelir_kurumlar_istisna_indirim_tasdiki;
+const fieldPrefix = 'gelir_kurumlar_istisna_indirim_tasdiki';
+const currentYear = new Date().getFullYear();
+const hesapDonemiOptions = [currentYear - 1, currentYear, currentYear + 1, currentYear + 2];
+---
+
+<fieldset data-requires-service disabled>
+	<legend>3) Gelir / Kurumlar Vergisi İstisna ve İndirim Tasdiki İçin Ön Bilgiler</legend>
+	<p>İlgili istisna / indirim kalemlerini seçip yaklaşık tutarlarını giriniz.</p>
+	<p>
+		Yararlanılan istisna veya indirim uygulamasının süreklilik arz etmesi halinde, ilgili sürecin tam
+		tasdik hizmeti kapsamında değerlendirilmesi daha uygun olabilir. Bu husus, ön değerlendirme
+		sırasında ayrıca göz önünde bulundurulmaktadır.
+	</p>
+
+	<div class="add-list-panel">
+		<label for={`${fieldPrefix}_kalemSecici`}>İstisna / indirim / uygulama seçiniz</label>
+		<div class="add-list-controls">
+			<select id={`${fieldPrefix}_kalemSecici`} name={`${fieldPrefix}_kalemSecici`}>
+				<option value="">Kalem seçiniz</option>
+				{
+					istisnaIndirimItems.map((item) => (
+						<option value={item.key} data-label={item.label}>
+							{item.label}
+						</option>
+					))
+				}
+			</select>
+			<button type="button" id={`${fieldPrefix}_ekle`}>Ekle</button>
+		</div>
+		<p>İlgili istisna veya indirim kalemini seçip 'Ekle' butonuna basınız. Eklenen kalemler için yaklaşık tutar girebilirsiniz.</p>
+	</div>
+
+	<div id={`${fieldPrefix}_selectedList`} class="selected-list" data-empty-text="Henüz kalem eklenmedi."></div>
+
+	<div class="summary-box">
+		<p>
+			<strong>Seçili kalem sayısı:</strong>
+			<span id={`${fieldPrefix}_count`}>0</span>
+		</p>
+		<p>
+			<strong>Toplam yaklaşık tutar:</strong>
+			<span id={`${fieldPrefix}_total`}>0 TL</span>
+		</p>
+	</div>
+
+	<template id={`${fieldPrefix}_rowTemplate`}>
+		<div class="selected-row" data-selected-item>
+			<input type="hidden" data-role="item-key" />
+			<p data-role="item-label"></p>
+			<label>
+				Yaklaşık tutar
+				<input type="text" data-role="amount" placeholder="Tutar belirtiniz" />
+			</label>
+			<label>
+				Not (opsiyonel)
+				<input type="text" data-role="note" placeholder="Varsa kısa not yazınız" />
+			</label>
+			<button type="button" data-role="remove">Kaldır</button>
+		</div>
+	</template>
+
+	<div>
+		<label for={`${fieldPrefix}_ilgiliHesapDonemi`}>
+			İlgili hesap dönemi <span class="required-mark">*</span>
+		</label>
+		<select id={`${fieldPrefix}_ilgiliHesapDonemi`} name={`${fieldPrefix}_ilgiliHesapDonemi`} required>
+			{hesapDonemiOptions.map((optionYear) => <option selected={optionYear === currentYear}>{optionYear}</option>)}
+		</select>
+	</div>
+
+	{
+		fields.map((field) => (
+			<div>
+				<label for={`${fieldPrefix}_${field.name}`}>
+					{field.label}
+					{field.required && <span class="required-mark">*</span>}
+				</label>
+				<select
+					id={`${fieldPrefix}_${field.name}`}
+					name={`${fieldPrefix}_${field.name}`}
+					required={field.required}
+				>
+					<option value="">Seçim yapınız</option>
+					{field.options?.map((optionItem) => <option value={optionItem.value}>{optionItem.label}</option>)}
+				</select>
+			</div>
+		))
+	}
+</fieldset>
+
+<script>
+	const componentPrefix = 'gelir_kurumlar_istisna_indirim_tasdiki';
+	const selectorElement = document.querySelector(`#${componentPrefix}_kalemSecici`);
+	const addButton = document.querySelector(`#${componentPrefix}_ekle`);
+	const selectedListElement = document.querySelector(`#${componentPrefix}_selectedList`);
+	const rowTemplate = document.querySelector(`#${componentPrefix}_rowTemplate`);
+	const countElement = document.querySelector(`#${componentPrefix}_count`);
+	const totalElement = document.querySelector(`#${componentPrefix}_total`);
+	const selectedKeys = new Set();
+
+	const parseAmount = (rawValue) => {
+		const normalized = rawValue.replace(/[^\d,.-]/g, '').replace(/\./g, '').replace(',', '.');
+		const value = Number(normalized);
+		return Number.isFinite(value) ? value : 0;
+	};
+
+	const formatAmount = (value) => new Intl.NumberFormat('tr-TR').format(value);
+
+	const renderSummary = () => {
+		const rows = selectedListElement?.querySelectorAll('[data-selected-item]') ?? [];
+		let total = 0;
+
+		rows.forEach((row) => {
+			const amountInput = row.querySelector('[data-role="amount"]');
+			if (amountInput instanceof HTMLInputElement) {
+				total += parseAmount(amountInput.value);
+			}
+		});
+
+		if (countElement) countElement.textContent = String(rows.length);
+		if (totalElement) totalElement.textContent = `${formatAmount(total)} TL`;
+	};
+
+	const renderEmptyState = () => {
+		if (!selectedListElement) return;
+		const hasRows = selectedListElement.querySelector('[data-selected-item]');
+		if (hasRows) {
+			selectedListElement.removeAttribute('data-empty');
+			return;
+		}
+		selectedListElement.setAttribute('data-empty', 'true');
+	};
+
+	const attachRowEvents = (rowElement, itemKey) => {
+		const removeButton = rowElement.querySelector('[data-role="remove"]');
+		const amountInput = rowElement.querySelector('[data-role="amount"]');
+
+		if (removeButton instanceof HTMLButtonElement) {
+			removeButton.addEventListener('click', () => {
+				selectedKeys.delete(itemKey);
+				rowElement.remove();
+				renderEmptyState();
+				renderSummary();
+			});
+		}
+
+		if (amountInput instanceof HTMLInputElement) {
+			amountInput.addEventListener('input', renderSummary);
+		}
+	};
+
+	const addSelectedItem = () => {
+		if (
+			!(selectorElement instanceof HTMLSelectElement) ||
+			!(selectedListElement instanceof HTMLDivElement) ||
+			!(rowTemplate instanceof HTMLTemplateElement)
+		) {
+			return;
+		}
+
+		const itemKey = selectorElement.value;
+		if (!itemKey || selectedKeys.has(itemKey)) return;
+
+		const selectedOption = selectorElement.selectedOptions[0];
+		if (!selectedOption) return;
+
+		const itemLabel = selectedOption.dataset.label ?? selectedOption.textContent ?? itemKey;
+		const fragment = rowTemplate.content.cloneNode(true);
+		const rowElement = fragment.querySelector('[data-selected-item]');
+		if (!(rowElement instanceof HTMLDivElement)) return;
+
+		const keyInput = rowElement.querySelector('[data-role="item-key"]');
+		if (keyInput instanceof HTMLInputElement) {
+			keyInput.name = `${componentPrefix}_selectedItems[]`;
+			keyInput.value = itemKey;
+		}
+
+		const labelElement = rowElement.querySelector('[data-role="item-label"]');
+		if (labelElement) labelElement.textContent = itemLabel;
+
+		const amountInput = rowElement.querySelector('[data-role="amount"]');
+		if (amountInput instanceof HTMLInputElement) {
+			amountInput.name = `${componentPrefix}_${itemKey}_tutar`;
+		}
+
+		const noteInput = rowElement.querySelector('[data-role="note"]');
+		if (noteInput instanceof HTMLInputElement) {
+			noteInput.name = `${componentPrefix}_${itemKey}_not`;
+		}
+
+		selectedListElement.appendChild(rowElement);
+		selectedKeys.add(itemKey);
+		selectorElement.value = '';
+
+		attachRowEvents(rowElement, itemKey);
+		renderEmptyState();
+		renderSummary();
+	};
+
+	if (addButton instanceof HTMLButtonElement) {
+		addButton.addEventListener('click', addSelectedItem);
+	}
+
+	renderEmptyState();
+	renderSummary();
+</script>

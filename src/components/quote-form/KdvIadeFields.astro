@@ -1,0 +1,125 @@
+---
+import { serviceFields } from '../../lib/quote-fields';
+
+const fields = serviceFields.kdv_otv_iade_tasdik;
+const fieldPrefix = 'kdv_otv_iade_tasdik';
+
+const islemTurleriField = fields.find((field) => field.name === 'islemTurleri');
+const raporSikligiField = fields.find((field) => field.name === 'raporSikligi');
+const yaklasikIadeTutariField = fields.find((field) => field.name === 'yaklasikIadeTutari');
+const oncekiSurecField = fields.find((field) => field.name === 'oncekiSurec');
+const ekAciklamaField = fields.find((field) => field.name === 'ekAciklama');
+---
+
+<fieldset data-requires-service disabled>
+	<legend>3) KDV / ÖTV İadesi Tasdik Hizmeti İçin Ön Bilgiler</legend>
+	<p>İade sürecinin ön kapsamı için temel bilgileri paylaşınız.</p>
+
+	{islemTurleriField && (
+		<div>
+			<p>
+				{islemTurleriField.label}
+				{islemTurleriField.required && <span class="required-mark">*</span>}
+			</p>
+			<p>Birden fazla seçim yapabilirsiniz.</p>
+			<div class="checkbox-group">
+				{
+					islemTurleriField.options?.map((optionItem) => (
+						<label class="checkbox-item" for={`${fieldPrefix}_${islemTurleriField.name}_${optionItem.value}`}>
+							<input
+								id={`${fieldPrefix}_${islemTurleriField.name}_${optionItem.value}`}
+								name={`${fieldPrefix}_${islemTurleriField.name}[]`}
+								type="checkbox"
+								value={optionItem.value}
+								data-reveal-target={
+									optionItem.value === 'diger' ? `${fieldPrefix}_islemTurleri_diger_aciklama` : undefined
+								}
+							/>
+							<span>{optionItem.label}</span>
+						</label>
+					))
+				}
+			</div>
+			<div id={`${fieldPrefix}_islemTurleri_diger_aciklama`} class="conditional-fields" hidden>
+				<label for={`${fieldPrefix}_islemTurleri_digerAciklama`}>Diğer işlem türü açıklaması</label>
+				<input
+					id={`${fieldPrefix}_islemTurleri_digerAciklama`}
+					name={`${fieldPrefix}_islemTurleri_digerAciklama`}
+					type="text"
+					placeholder="Kısa açıklama yazınız"
+				/>
+			</div>
+		</div>
+	)}
+
+	{raporSikligiField && (
+		<div>
+			<label for={`${fieldPrefix}_${raporSikligiField.name}`}>
+				{raporSikligiField.label}
+				{raporSikligiField.required && <span class="required-mark">*</span>}
+			</label>
+			<select
+				id={`${fieldPrefix}_${raporSikligiField.name}`}
+				name={`${fieldPrefix}_${raporSikligiField.name}`}
+				required={raporSikligiField.required}
+			>
+				<option value="">Seçim yapınız</option>
+				{
+					raporSikligiField.options?.map((optionItem) => (
+						<option value={optionItem.value}>{optionItem.label}</option>
+					))
+				}
+			</select>
+		</div>
+	)}
+
+	{yaklasikIadeTutariField && (
+		<div>
+			<label for={`${fieldPrefix}_${yaklasikIadeTutariField.name}`}>
+				{yaklasikIadeTutariField.label}
+				{yaklasikIadeTutariField.required && <span class="required-mark">*</span>}
+			</label>
+			<select
+				id={`${fieldPrefix}_${yaklasikIadeTutariField.name}`}
+				name={`${fieldPrefix}_${yaklasikIadeTutariField.name}`}
+				required={yaklasikIadeTutariField.required}
+			>
+				<option value="">Seçim yapınız</option>
+				{
+					yaklasikIadeTutariField.options?.map((optionItem) => (
+						<option value={optionItem.value}>{optionItem.label}</option>
+					))
+				}
+			</select>
+		</div>
+	)}
+
+	{oncekiSurecField && (
+		<div>
+			<label for={`${fieldPrefix}_${oncekiSurecField.name}`}>
+				{oncekiSurecField.label}
+				{oncekiSurecField.required && <span class="required-mark">*</span>}
+			</label>
+			<select
+				id={`${fieldPrefix}_${oncekiSurecField.name}`}
+				name={`${fieldPrefix}_${oncekiSurecField.name}`}
+				required={oncekiSurecField.required}
+			>
+				<option value="">Seçim yapınız</option>
+				{oncekiSurecField.options?.map((optionItem) => <option value={optionItem.value}>{optionItem.label}</option>)}
+			</select>
+		</div>
+	)}
+
+	{ekAciklamaField && (
+		<div>
+			<label for={`${fieldPrefix}_${ekAciklamaField.name}`}>{ekAciklamaField.label}</label>
+			<textarea
+				id={`${fieldPrefix}_${ekAciklamaField.name}`}
+				name={`${fieldPrefix}_${ekAciklamaField.name}`}
+				placeholder={ekAciklamaField.placeholder}
+				rows={4}
+			/>
+		</div>
+	)}
+</fieldset>

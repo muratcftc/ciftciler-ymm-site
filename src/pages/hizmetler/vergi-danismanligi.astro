@@ -1,0 +1,33 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ServicePageSections from '../../components/services/ServicePageSections.astro';
+---
+
+<MainLayout title="Vergi Danışmanlığı | Çiftçiler YMM">
+	<main>
+		<ServicePageSections
+			serviceTitle="Vergi Danışmanlığı"
+			serviceSummary="Mevzuat hükümleri ve şirket uygulamaları birlikte değerlendirilerek vergi danışmanlığı hizmeti sunulur."
+			problemItems={[
+				'Yeni işlem veya yatırım kararlarında vergi etkisinin değerlendirilmesi gerektiğinde',
+				'Mevzuat değişikliklerinin şirket süreçlerine etkisi netleştirilmek istendiğinde',
+				'Periyodik vergi danışmanlığı ihtiyacı oluştuğunda'
+			]}
+			approachItems={[
+				'Talep konusu teknik açıdan değerlendirilir',
+				'Uygulama alternatifleri ve olası etkiler birlikte ele alınır',
+				'Gerekli durumlarda dönemsel takip planı oluşturulur'
+			]}
+			scopeItems={[
+				'Konu bazlı vergi değerlendirmesi',
+				'Mevzuat değişikliklerine ilişkin bilgilendirme',
+				'Şirket süreçlerine yönelik uygulama notları'
+			]}
+			whyItems={[
+				'Konu bazlı ve dokümante edilmiş değerlendirme yaklaşımı',
+				'Şirket süreçlerine uyumlu iletişim modeli',
+				'Düzenli ve anlaşılır bilgilendirme'
+			]}
+		/>
+	</main>
+</MainLayout>

@@ -1,0 +1,40 @@
+---
+import { commonFields } from '../../lib/quote-fields';
+---
+
+<fieldset data-requires-service disabled>
+	<legend>2) Kurumsal İletişim ve Şirket Bilgileri</legend>
+	<p>Bu bilgiler ön değerlendirme ve geri dönüş için kullanılır.</p>
+	{
+		commonFields.map((field) => (
+			<div>
+				<label for={field.name}>
+					{field.label}
+					{field.required && <span class="required-mark">*</span>}
+				</label>
+				{field.type === 'textarea' ? (
+					<textarea
+						id={field.name}
+						name={field.name}
+						required={field.required}
+						placeholder={field.placeholder}
+						rows={4}
+					/>
+				) : field.type === 'select' ? (
+					<select id={field.name} name={field.name} required={field.required}>
+						<option value="">Seçim yapınız</option>
+						{field.options?.map((optionItem) => <option value={optionItem.value}>{optionItem.label}</option>)}
+					</select>
+				) : (
+					<input
+						id={field.name}
+						name={field.name}
+						type={field.type}
+						required={field.required}
+						placeholder={field.placeholder}
+					/>
+				)}
+			</div>
+		))
+	}
+</fieldset>

@@ -1,0 +1,33 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ServicePageSections from '../../components/services/ServicePageSections.astro';
+---
+
+<MainLayout title="Vergi İnceleme Süreçlerinin Takibi | Çiftçiler YMM">
+	<main>
+		<ServicePageSections
+			serviceTitle="Vergi İnceleme Süreçlerinin Takibi"
+			serviceSummary="Vergi inceleme sürecinin belge, takvim ve süreç adımları açısından düzenli şekilde izlenmesine yönelik hizmet sunulur."
+			problemItems={[
+				'İnceleme tebligatı sonrasında süreç adımlarının netleştirilmesi gerektiğinde',
+				'Belge hazırlığı ve sunum takviminin koordinasyona ihtiyaç duyduğunda',
+				'İnceleme sürecinde şirket içi birimler arasında planlı iletişim gerektiğinde'
+			]}
+			approachItems={[
+				'İnceleme kapsamı ve talep edilen bilgi seti değerlendirilir',
+				'Belge hazırlık ve sunum adımları takvim bazında planlanır',
+				'Süreç boyunca ilgili birimlerle düzenli bilgi paylaşımı yapılır'
+			]}
+			scopeItems={[
+				'İnceleme taleplerinin teknik değerlendirilmesi',
+				'Belge hazırlık ve süreç takibi',
+				'Süreç aşamalarına ilişkin düzenli bilgilendirme'
+			]}
+			whyItems={[
+				'Takvim ve belge akışına odaklı süreç yönetimi',
+				'Şirket birimleriyle koordineli çalışma düzeni',
+				'Kayıtlı ve izlenebilir bilgilendirme yaklaşımı'
+			]}
+		/>
+	</main>
+</MainLayout>

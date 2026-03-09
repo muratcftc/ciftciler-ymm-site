@@ -1,0 +1,33 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ServicePageSections from '../../components/services/ServicePageSections.astro';
+---
+
+<MainLayout title="Tam Tasdik | Çiftçiler YMM">
+	<main>
+		<ServicePageSections
+			serviceTitle="Tam Tasdik"
+			serviceSummary="Mali tabloların ve vergi süreçlerinin mevzuata uygun ve izlenebilir şekilde yürütülmesine yönelik hizmet sunulur."
+			problemItems={[
+				'Şirket ölçeği büyüdüğünde vergi süreçlerinde kontrol ihtiyacı arttığında',
+				'Dönem sonu kapanışlarında kayıt ve beyan süreçlerinin birlikte değerlendirilmesi gerektiğinde',
+				'Yönetim raporlamasında vergi süreçlerine ilişkin düzenli bilgi akışı talep edildiğinde'
+			]}
+			approachItems={[
+				'Mevcut süreç ve belge akışı başlangıç aşamasında değerlendirilir',
+				'Dönemsel kontrol planı üzerinden takip adımları belirlenir',
+				'Muhasebe, finans ve yönetim birimleriyle koordineli ilerlenir'
+			]}
+			scopeItems={[
+				'Vergi mevzuatı uyum kontrolleri',
+				'Beyan, kayıt ve hesap süreçlerinin dönemsel değerlendirilmesi',
+				'Belirlenen risk alanlarına ilişkin bilgilendirme ve öneri notları'
+			]}
+			whyItems={[
+				'Kurumsal süreçlere uyumlu çalışma planı',
+				'Takvim ve sorumluluk bazlı süreç takibi',
+				'Düzenli bilgilendirme ve kayıtlı çalışma yaklaşımı'
+			]}
+		/>
+	</main>
+</MainLayout>

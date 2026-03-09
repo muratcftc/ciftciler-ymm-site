@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import MainLayout from '../../layouts/MainLayout.astro';
+
+export async function getStaticPaths() {
+	const sirkulerler = await getCollection('sirkulerler');
+
+	return sirkulerler.map((entry) => ({
+		params: { slug: entry.slug },
+		props: { entry }
+	}));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<MainLayout title={`${entry.data.title} | Sirkülerler | Çiftçiler YMM`}>
+	<main>
+		<article>
+			<header>
+				<h1>{entry.data.title}</h1>
+				<p>{entry.data.summary}</p>
+				<p>
+					Yayın Tarihi:{' '}
+					<time datetime={entry.data.publishDate.toISOString()}>
+						{entry.data.publishDate.toLocaleDateString('tr-TR')}
+					</time>
+				</p>
+			</header>
+
+			<Content />
+		</article>
+	</main>
+</MainLayout>

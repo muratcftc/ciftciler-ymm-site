@@ -1,0 +1,17 @@
+---
+import { SERVICE_OPTIONS } from '../../lib/service-config';
+---
+
+<fieldset>
+	<legend>1) Hizmet ve Talep Türü</legend>
+	<p>Talebinizin doğru başlık altında değerlendirilmesi için hizmet seçiniz.</p>
+	<label for="service-type">Talep Konusu Hizmet <span class="required-mark">*</span></label>
+	<select id="service-type" name="serviceType" required>
+		<option value="">Hizmet seçiniz</option>
+		{
+			SERVICE_OPTIONS.map((serviceOption) => (
+				<option value={serviceOption.key}>{serviceOption.label}</option>
+			))
+		}
+	</select>
+</fieldset>

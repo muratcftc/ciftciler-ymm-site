@@ -1,0 +1,61 @@
+---
+interface Props {
+	serviceTitle: string;
+	serviceSummary: string;
+	problemTitle?: string;
+	problemItems: string[];
+	approachItems: string[];
+	scopeItems: string[];
+	whyItems: string[];
+}
+
+const {
+	serviceTitle,
+	serviceSummary,
+	problemTitle = 'Şirketler bu hizmete hangi durumlarda ihtiyaç duyar?',
+	problemItems,
+	approachItems,
+	scopeItems,
+	whyItems
+} = Astro.props;
+---
+
+<section>
+	<p>Çiftçiler YMM Hizmeti</p>
+	<h1>{serviceTitle}</h1>
+	<p>{serviceSummary}</p>
+</section>
+
+<section>
+	<h2>1) {problemTitle}</h2>
+	<ul>
+		{problemItems.map((item) => <li>{item}</li>)}
+	</ul>
+</section>
+
+<section>
+	<h2>2) Çalışma Yaklaşımı</h2>
+	<ul>
+		{approachItems.map((item) => <li>{item}</li>)}
+	</ul>
+</section>
+
+<section>
+	<h2>3) Hizmet Kapsamı</h2>
+	<ul>
+		{scopeItems.map((item) => <li>{item}</li>)}
+	</ul>
+</section>
+
+<section>
+	<h2>4) Bu Hizmete İlişkin Çalışma Esaslarımız</h2>
+	<ul>
+		{whyItems.map((item) => <li>{item}</li>)}
+	</ul>
+</section>
+
+<section>
+	<h2>5) Teklif Ön Değerlendirme</h2>
+	<p>Hizmet kapsamının ön değerlendirilmesi için teklif formu üzerinden bilgi iletebilirsiniz.</p>
+	<a href="/teklif-al">Kurumsal Ön Değerlendirme Formuna Geçin</a>
+</section>

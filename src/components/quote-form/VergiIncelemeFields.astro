@@ -1,0 +1,51 @@
+---
+import { serviceFields } from '../../lib/quote-fields';
+
+const fields = serviceFields.vergi_inceleme_uyusmazlik;
+const fieldPrefix = 'vergi_inceleme_uyusmazlik';
+---
+
+<fieldset data-requires-service disabled>
+	<legend>3) Vergi İnceleme ve Vergi Uyuşmazlık Süreçleri İçin Ön Bilgiler</legend>
+	<p>
+		Bu tür hizmetler belge incelemesi gerektirdiğinden teklif öncesinde kısa bir değerlendirme
+		görüşmesi planlanır.
+	</p>
+
+	{
+		fields.map((field) => (
+			<div>
+				<label for={`${fieldPrefix}_${field.name}`}>
+					{field.label}
+					{field.required && <span class="required-mark">*</span>}
+				</label>
+				{field.type === 'textarea' ? (
+					<textarea
+						id={`${fieldPrefix}_${field.name}`}
+						name={`${fieldPrefix}_${field.name}`}
+						required={field.required}
+						placeholder={field.placeholder}
+						rows={4}
+					/>
+				) : field.type === 'text' ? (
+					<input
+						id={`${fieldPrefix}_${field.name}`}
+						name={`${fieldPrefix}_${field.name}`}
+						type="text"
+						required={field.required}
+						placeholder={field.placeholder}
+					/>
+				) : (
+					<select
+						id={`${fieldPrefix}_${field.name}`}
+						name={`${fieldPrefix}_${field.name}`}
+						required={field.required}
+					>
+						<option value="">Seçim yapınız</option>
+						{field.options?.map((optionItem) => <option value={optionItem.value}>{optionItem.label}</option>)}
+					</select>
+				)}
+			</div>
+		))
+	}
+</fieldset>

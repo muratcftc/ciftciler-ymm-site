@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 96" fill="none">
+  <defs>
+    <style>
+      .brand-red { fill: #c8102e; stroke: #c8102e; }
+      .brand-dark { fill: #3f4143; stroke: #3f4143; }
+      .wordmark {
+        fill: #c8102e;
+        font-family: "Segoe UI", "Arial", sans-serif;
+        font-size: 58px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+      }
+    </style>
+  </defs>
+
+  <line x1="0" y1="48" x2="122" y2="48" class="brand-red" stroke-width="2.2" stroke-linecap="round" opacity="0.85" />
+
+  <path d="M162 20 A28 28 0 0 0 162 76" class="brand-red" stroke-width="16" />
+  <path d="M162 20 A28 28 0 0 1 162 76" class="brand-dark" stroke-width="16" />
+  <path d="M162 76 L162 90 L149 82 L149 76 Z" class="brand-red" />
+  <path d="M189 0 L205 10 L205 48 A43 43 0 0 1 162 91 L162 75 A27 27 0 0 0 189 48 Z" class="brand-dark" />
+  <circle cx="162" cy="48" r="11" class="brand-red" />
+
+  <text x="223" y="66" class="wordmark">&#199;&#304;FT&#199;&#304;LER</text>
+
+  <line x1="538" y1="48" x2="1200" y2="48" class="brand-red" stroke-width="2.2" stroke-linecap="round" opacity="0.78" />
+</svg>

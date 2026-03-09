@@ -1,0 +1,33 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ServicePageSections from '../../components/services/ServicePageSections.astro';
+---
+
+<MainLayout title="Vergi Dava Süreç Takibi | Çiftçiler YMM">
+	<main>
+		<ServicePageSections
+			serviceTitle="Vergi Dava Süreç Takibi"
+			serviceSummary="Vergi uyuşmazlıklarına ilişkin dava süreçlerinin teknik içerik ve takvim yönünden izlenmesine yönelik hizmet sunulur."
+			problemItems={[
+				'İhbarname, rapor veya tarhiyat sonrasında süreç planı gerektiğinde',
+				'Dava veya uzlaşma öncesi teknik hazırlık adımları netleştirilmek istendiğinde',
+				'Süreç tarihleri ve belge akışının düzenli takibi gerektiğinde'
+			]}
+			approachItems={[
+				'Uyuşmazlık konusu ve dönem etkisi kapsamlı şekilde değerlendirilir',
+				'Dosya hazırlık adımları ve gerekli teknik içerik planlanır',
+				'Süreç takibi ilgili birimlerle koordineli yürütülür'
+			]}
+			scopeItems={[
+				'Dava/uzlaşma öncesi teknik değerlendirme desteği',
+				'Süreç adımları ve kritik tarihlerin takibi',
+				'Şirket yönetimine yönelik düzenli durum bilgilendirmesi'
+			]}
+			whyItems={[
+				'Belge ve takvim odaklı süreç yaklaşımı',
+				'Kurumsal iletişim ve koordinasyon disiplini',
+				'Kayıtlı ve öngörülebilir çalışma düzeni'
+			]}
+		/>
+	</main>
+</MainLayout>

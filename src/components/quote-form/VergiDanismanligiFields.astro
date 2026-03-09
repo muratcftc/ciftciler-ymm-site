@@ -1,0 +1,141 @@
+---
+import { serviceFields } from '../../lib/quote-fields';
+
+const fields = serviceFields.vergi_danismanligi;
+const fieldPrefix = 'vergi_danismanligi';
+
+const vergiAlaniField = fields.find((field) => field.name === 'vergiAlani');
+const hizmetModeliField = fields.find((field) => field.name === 'hizmetModeli');
+const zamanOnceligiField = fields.find((field) => field.name === 'zamanOnceligi');
+const danismanlikKonusuField = fields.find((field) => field.name === 'danismanlikKonusu');
+const kisaAciklamaField = fields.find((field) => field.name === 'kisaAciklama');
+---
+
+<fieldset data-requires-service disabled>
+	<legend>3) Vergi Danışmanlığı İçin Ön Bilgiler</legend>
+	<p>Danışmanlık talebinin çerçevesi için aşağıdaki alanları doldurunuz.</p>
+
+	{vergiAlaniField && (
+		<div>
+			<p>
+				{vergiAlaniField.label}
+				{vergiAlaniField.required && <span class="required-mark">*</span>}
+			</p>
+			<p>Birden fazla seçim yapabilirsiniz.</p>
+			<div class="checkbox-group">
+				{
+					vergiAlaniField.options?.map((optionItem) => (
+						<label class="checkbox-item" for={`${fieldPrefix}_${vergiAlaniField.name}_${optionItem.value}`}>
+							<input
+								id={`${fieldPrefix}_${vergiAlaniField.name}_${optionItem.value}`}
+								name={`${fieldPrefix}_${vergiAlaniField.name}[]`}
+								type="checkbox"
+								value={optionItem.value}
+								data-reveal-target={
+									optionItem.value === 'diger' ? `${fieldPrefix}_vergiAlani_diger_aciklama` : undefined
+								}
+							/>
+							<span>{optionItem.label}</span>
+						</label>
+					))
+				}
+			</div>
+			<div id={`${fieldPrefix}_vergiAlani_diger_aciklama`} class="conditional-fields" hidden>
+				<label for={`${fieldPrefix}_vergiAlani_digerAciklama`}>Diğer vergi alanı açıklaması</label>
+				<input
+					id={`${fieldPrefix}_vergiAlani_digerAciklama`}
+					name={`${fieldPrefix}_vergiAlani_digerAciklama`}
+					type="text"
+					placeholder="Kısa açıklama yazınız"
+				/>
+			</div>
+		</div>
+	)}
+
+	{hizmetModeliField && (
+		<div>
+			<label for={`${fieldPrefix}_${hizmetModeliField.name}`}>
+				{hizmetModeliField.label}
+				{hizmetModeliField.required && <span class="required-mark">*</span>}
+			</label>
+			<select
+				id={`${fieldPrefix}_${hizmetModeliField.name}`}
+				name={`${fieldPrefix}_${hizmetModeliField.name}`}
+				required={hizmetModeliField.required}
+			>
+				<option value="">Seçim yapınız</option>
+				{hizmetModeliField.options?.map((optionItem) => <option value={optionItem.value}>{optionItem.label}</option>)}
+			</select>
+		</div>
+	)}
+
+	{zamanOnceligiField && (
+		<div>
+			<label for={`${fieldPrefix}_${zamanOnceligiField.name}`}>
+				{zamanOnceligiField.label}
+				{zamanOnceligiField.required && <span class="required-mark">*</span>}
+			</label>
+			<select
+				id={`${fieldPrefix}_${zamanOnceligiField.name}`}
+				name={`${fieldPrefix}_${zamanOnceligiField.name}`}
+				required={zamanOnceligiField.required}
+			>
+				<option value="">Seçim yapınız</option>
+				{
+					zamanOnceligiField.options?.map((optionItem) => (
+						<option value={optionItem.value}>{optionItem.label}</option>
+					))
+				}
+			</select>
+		</div>
+	)}
+
+	{danismanlikKonusuField && (
+		<div>
+			<p>
+				{danismanlikKonusuField.label}
+				{danismanlikKonusuField.required && <span class="required-mark">*</span>}
+			</p>
+			<p>Birden fazla seçim yapabilirsiniz.</p>
+			<div class="checkbox-group">
+				{
+					danismanlikKonusuField.options?.map((optionItem) => (
+						<label class="checkbox-item" for={`${fieldPrefix}_${danismanlikKonusuField.name}_${optionItem.value}`}>
+							<input
+								id={`${fieldPrefix}_${danismanlikKonusuField.name}_${optionItem.value}`}
+								name={`${fieldPrefix}_${danismanlikKonusuField.name}[]`}
+								type="checkbox"
+								value={optionItem.value}
+								data-reveal-target={
+									optionItem.value === 'diger' ? `${fieldPrefix}_danismanlikKonusu_diger_aciklama` : undefined
+								}
+							/>
+							<span>{optionItem.label}</span>
+						</label>
+					))
+				}
+			</div>
+			<div id={`${fieldPrefix}_danismanlikKonusu_diger_aciklama`} class="conditional-fields" hidden>
+				<label for={`${fieldPrefix}_danismanlikKonusu_digerAciklama`}>Diğer danışmanlık konusu açıklaması</label>
+				<input
+					id={`${fieldPrefix}_danismanlikKonusu_digerAciklama`}
+					name={`${fieldPrefix}_danismanlikKonusu_digerAciklama`}
+					type="text"
+					placeholder="Kısa açıklama yazınız"
+				/>
+			</div>
+		</div>
+	)}
+
+	{kisaAciklamaField && (
+		<div>
+			<label for={`${fieldPrefix}_${kisaAciklamaField.name}`}>{kisaAciklamaField.label}</label>
+			<textarea
+				id={`${fieldPrefix}_${kisaAciklamaField.name}`}
+				name={`${fieldPrefix}_${kisaAciklamaField.name}`}
+				placeholder={kisaAciklamaField.placeholder}
+				rows={4}
+			/>
+		</div>
+	)}
+</fieldset>

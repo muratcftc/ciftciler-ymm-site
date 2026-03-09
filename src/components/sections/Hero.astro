@@ -1,0 +1,154 @@
+﻿---
+---
+
+<section class="hero">
+	<div class="hero__content">
+		<h1>Kurumsal Vergi Süreçlerinde Güvenilir YMM Desteği</h1>
+		<p>
+			Çiftçiler YMM, şirketlerin vergi ve tasdik süreçlerini mevzuata uyum, düzenli raporlama ve öngörülebilir
+			iş akışı odağında yürütür.
+		</p>
+		<div class="hero__actions">
+			<a href="/hizmetler">Hizmetlerimizi İnceleyin</a>
+			<a href="/teklif-al">Kurumsal Ön Değerlendirme</a>
+		</div>
+	</div>
+</section>
+
+<style>
+	.hero {
+		--hero-parallax-y: 0px;
+		background:
+			linear-gradient(135deg, rgba(7, 22, 34, 0.2) 0%, rgba(8, 25, 36, 0.08) 100%),
+			radial-gradient(circle at 20% 15%, rgba(41, 83, 114, 0.45), transparent 42%),
+			url('/assets/hero-structure.svg'),
+			linear-gradient(145deg, #0a2234 0%, #113247 45%, #15445b 100%);
+		background-repeat: no-repeat;
+		background-size: auto, auto, cover, auto;
+		background-position:
+			center,
+			center,
+			center calc(50% + var(--hero-parallax-y)),
+			center;
+		border: 1px solid #17384b;
+		border-radius: 14px;
+		color: #f3f8fc;
+		text-align: center;
+		padding: clamp(2.4rem, 8vw, 5rem) 1rem;
+		transition: background-position 260ms ease-out;
+	}
+
+	.hero__content {
+		width: min(780px, 100%);
+		margin: 0 auto;
+		display: grid;
+		gap: 1rem;
+	}
+
+	.hero h1 {
+		margin: 0;
+		font-size: clamp(2rem, 4vw, 3.2rem);
+		line-height: 1.16;
+		color: #ffffff;
+	}
+
+	.hero p {
+		margin: 0 auto;
+		max-width: 62ch;
+		color: #d6e4ee;
+		font-size: clamp(1rem, 1.7vw, 1.12rem);
+	}
+
+	.hero__actions {
+		margin-top: 0.5rem;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.75rem;
+	}
+
+	.hero__actions a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 2.75rem;
+		padding: 0.65rem 1.1rem;
+		border-radius: 10px;
+		border: 1px solid rgba(216, 229, 239, 0.45);
+		background: transparent;
+		color: #f8fbff;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.hero__actions a:first-child {
+		background: #f3f8fc;
+		border-color: #f3f8fc;
+		color: #0d2d40;
+	}
+
+	.hero__actions a:hover {
+		text-decoration: none;
+		filter: brightness(0.95);
+	}
+
+	@media (max-width: 680px) {
+		.hero {
+			padding: 2rem 1rem;
+		}
+
+		.hero__actions {
+			flex-direction: column;
+		}
+
+		.hero__actions a {
+			width: 100%;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hero {
+			transition: none;
+			--hero-parallax-y: 0px;
+		}
+	}
+</style>
+
+<script is:inline>
+	(() => {
+		const hero = document.querySelector('.hero');
+		if (!hero) return;
+
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (prefersReducedMotion) return;
+
+		let rafId = 0;
+		const maxShift = 10;
+
+		const updateHeroDepth = () => {
+			const rect = hero.getBoundingClientRect();
+			const viewportHeight = window.innerHeight || 1;
+
+			if (rect.bottom < 0 || rect.top > viewportHeight) {
+				return;
+			}
+
+			const progress = (viewportHeight - rect.top) / (viewportHeight + rect.height);
+			const centered = (progress - 0.5) * 2;
+			const shift = Math.max(-1, Math.min(1, centered)) * maxShift;
+			hero.style.setProperty('--hero-parallax-y', `${shift.toFixed(2)}px`);
+		};
+
+		const onScroll = () => {
+			if (rafId) return;
+			rafId = window.requestAnimationFrame(() => {
+				updateHeroDepth();
+				rafId = 0;
+			});
+		};
+
+		updateHeroDepth();
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll, { passive: true });
+	})();
+</script>
