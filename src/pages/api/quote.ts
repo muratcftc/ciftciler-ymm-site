@@ -339,6 +339,9 @@ export const POST: APIRoute = async ({ request }) => {
 		].join('\n');
 
 		const resend = new Resend(resendApiKey);
+		console.log('[quote api] FORM_SENDER_EMAIL exists:', Boolean(senderEmail));
+		console.log('[quote api] Resolved FORM_SENDER_EMAIL:', senderEmail);
+		console.log('[quote api] FORM_RECEIVER_EMAIL exists:', Boolean(receiverEmail));
 		await resend.emails.send({
 			from: senderEmail,
 			to: [receiverEmail],
